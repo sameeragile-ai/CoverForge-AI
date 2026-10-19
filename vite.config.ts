@@ -2,7 +2,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, Plugin } from 'vite';
-import { compileCharacterPrompt, analyzeConsistencyWithVision } from './server/geminiService';
+import { compileCharacterPrompt, analyzeConsistencyWithVision } from './server/geminiService.ts';
 
 function geminiApiPlugin(): Plugin {
   return {
@@ -69,7 +69,7 @@ export default defineConfig(() => {
     plugins: [react(), tailwindcss(), geminiApiPlugin()],
     resolve: {
       alias: {
-        '@': path.resolve(__dirname, '.'),
+        '@': path.resolve('.'),
       },
     },
     server: {
