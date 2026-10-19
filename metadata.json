@@ -1,0 +1,6 @@
+{
+  "name": "CoverForge AI - Book Cover Generator",
+  "description": "Character-consistent AI book cover generator and series planner powered by Gemini.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
