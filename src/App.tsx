@@ -15,7 +15,6 @@ import { PromptModal } from './components/PromptModal';
 import { Menu, X } from 'lucide-react';
 
 export default function App() {
-  // Tabs: 'create' | 'characters' | 'series' | 'gallery'
   const [currentTab, setCurrentTab] = useState<'create' | 'characters' | 'series' | 'gallery'>('create');
   const [isPromptModalOpen, setIsPromptModalOpen] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -135,21 +134,21 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col md:flex-row font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-[#FAF8F5] text-[#1C1B1A] flex flex-col md:flex-row antialiased">
       {/* Mobile Header Bar */}
-      <div className="md:hidden flex items-center justify-between p-4 bg-zinc-950 border-b border-zinc-800 sticky top-0 z-40">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white text-sm">
-            CF
-          </div>
-          <span className="font-extrabold text-white text-base">CoverForge AI</span>
+      <div className="md:hidden flex items-center justify-between p-4 bg-white border-b border-[#E8E4DE] sticky top-0 z-40">
+        <div>
+          <span className="font-['Playfair_Display'] text-xl font-normal text-[#1C1B1A]">
+            CoverForge
+          </span>
+          <div className="h-[2px] w-8 bg-gradient-to-r from-[#B4553A] to-[#D9A066] mt-1 rounded-full" />
         </div>
 
         <button
           onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
-          className="p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-900"
+          className="p-2 text-[#6B6763] hover:text-[#1C1B1A] rounded-[6px] hover:bg-[#FAF8F5]"
         >
-          {isMobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          {isMobileSidebarOpen ? <X className="w-5 h-5" strokeWidth={1.5} /> : <Menu className="w-5 h-5" strokeWidth={1.5} />}
         </button>
       </div>
 
@@ -173,7 +172,7 @@ export default function App() {
         />
       </div>
 
-      {/* Main Studio Viewport */}
+      {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {currentTab === 'create' && (
           <CoverCreator
@@ -212,7 +211,7 @@ export default function App() {
         )}
       </main>
 
-      {/* AI Studio Build Prompt Specification Modal */}
+      {/* Specification Modal */}
       <PromptModal
         isOpen={isPromptModalOpen}
         onClose={() => setIsPromptModalOpen(false)}

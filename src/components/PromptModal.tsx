@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Copy, Check, FileCode2, ExternalLink } from 'lucide-react';
+import { X, Copy, Check } from 'lucide-react';
 
 interface PromptModalProps {
   isOpen: boolean;
@@ -83,70 +83,65 @@ export const PromptModal: React.FC<PromptModalProps> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative my-8 flex flex-col max-h-[88vh]">
+    <div className="fixed inset-0 z-50 bg-[#1C1B1A]/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-white border border-[#E8E4DE] rounded-[10px] w-full max-w-3xl overflow-hidden shadow-lg relative my-8 flex flex-col max-h-[85vh]">
         {/* Header */}
-        <div className="p-6 border-b border-zinc-800 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
-              <FileCode2 className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-white">
-                Google AI Studio Master Build Prompt
-              </h3>
-              <p className="text-xs text-zinc-400">
-                Ready-to-use specification to build CoverForge AI in one turn
-              </p>
-            </div>
+        <div className="p-6 border-b border-[#E8E4DE] flex items-center justify-between shrink-0">
+          <div>
+            <h3 className="font-['Playfair_Display'] text-2xl font-normal text-[#1C1B1A]">
+              Build Specification
+            </h3>
+            <p className="text-xs text-[#6B6763] mt-1">
+              Specification prompt for CoverForge AI
+            </p>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleCopy}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-[8px] text-xs font-medium transition-colors ${
                 copied
-                  ? 'bg-emerald-600 text-white'
-                  : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20'
+                  ? 'bg-[#FAF8F5] text-[#B4553A] border border-[#E8E4DE]'
+                  : 'bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white hover:opacity-95'
               }`}
             >
               {copied ? (
                 <>
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Copied to Clipboard!</span>
+                  <Check className="w-3.5 h-3.5 text-[#B4553A]" strokeWidth={1.5} />
+                  <span>Copied</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>Copy Prompt</span>
+                  <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>Copy specification</span>
                 </>
               )}
             </button>
 
             <button
               onClick={onClose}
-              className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800"
+              className="p-2 text-[#6B6763] hover:text-[#1C1B1A] rounded-[6px] hover:bg-[#FAF8F5]"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5" strokeWidth={1.5} />
             </button>
           </div>
         </div>
 
         {/* Content Box */}
-        <div className="p-6 overflow-y-auto font-mono text-xs text-zinc-300 leading-relaxed space-y-4 bg-zinc-950/70 select-text">
-          <pre className="whitespace-pre-wrap font-sans text-xs text-zinc-300 leading-relaxed">
+        <div className="p-6 overflow-y-auto bg-[#FAF8F5] text-xs text-[#1C1B1A] leading-relaxed select-text font-mono">
+          <pre className="whitespace-pre-wrap font-sans text-xs text-[#1C1B1A] leading-relaxed">
             {MASTER_BUILD_PROMPT}
           </pre>
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-zinc-800 flex items-center justify-between bg-zinc-950 shrink-0 text-xs text-zinc-400">
-          <span>Formatted with all 8 requirements specified.</span>
+        <div className="p-4 border-t border-[#E8E4DE] flex items-center justify-between bg-white shrink-0 text-xs text-[#6B6763]">
+          <span>Full 8-part build specification.</span>
           <button
             onClick={handleCopy}
-            className="text-indigo-400 hover:text-indigo-300 font-semibold"
+            className="text-[#B4553A] hover:underline font-medium"
           >
-            {copied ? 'Copied!' : 'Click to copy text'}
+            {copied ? 'Copied' : 'Copy text to clipboard'}
           </button>
         </div>
       </div>

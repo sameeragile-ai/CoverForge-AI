@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
 import {
-  Sparkles,
-  Lock,
-  Layers,
-  Sliders,
-  Type,
   Download,
   Bookmark,
   RefreshCw,
-  ShieldCheck,
-  AlertCircle,
   Check,
   ChevronRight,
-  Eye,
-  SlidersHorizontal,
+  Sliders,
 } from 'lucide-react';
 import {
   Character,
@@ -37,22 +29,20 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
   onNavigateToCharacters,
   onSaveToGallery,
 }) => {
-  // If no character is selected, render prompt to pick or create one
   if (!activeCharacter) {
     return (
-      <div className="flex-1 p-8 flex flex-col items-center justify-center text-center max-w-lg mx-auto">
-        <div className="w-16 h-16 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center mb-4">
-          <Lock className="w-8 h-8" />
-        </div>
-        <h2 className="text-xl font-bold text-white">No Character Selected</h2>
-        <p className="text-zinc-400 text-sm mt-2">
-          CoverForge AI requires a character identity anchor to guarantee zero facial and outfit drift across your book covers.
+      <div className="p-12 flex flex-col items-center justify-center text-center max-w-md mx-auto my-16">
+        <h2 className="font-['Playfair_Display'] text-2xl font-normal text-[#1C1B1A]">
+          No character selected
+        </h2>
+        <p className="text-[#6B6763] text-sm mt-2 leading-relaxed">
+          Select or create a character to ensure facial structure, wardrobe, and art style remain consistent across covers.
         </p>
         <button
           onClick={onNavigateToCharacters}
-          className="mt-6 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all"
+          className="mt-6 px-5 py-2.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white font-medium text-sm hover:opacity-95 transition-opacity"
         >
-          Select or Create Character
+          Select character
         </button>
       </div>
     );
@@ -64,11 +54,11 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
   const [subtitle, setSubtitle] = useState('Secret of the Golden Lily');
   const [authorName, setAuthorName] = useState('Penelope Featherstone');
   const [scenePrompt, setScenePrompt] = useState(
-    'Perched heroically on a mossy Mayan stone dais surrounded by bioluminescent tropical flora and glowing golden sunbeams'
+    'Perched on a mossy stone dais surrounded by tropical flora and warm sunbeams'
   );
-  const [mood, setMood] = useState('Playful Whimsy & Wonder');
-  const [lighting, setLighting] = useState('Volumetric golden hour rays with soft ambient particles');
-  const [pose, setPose] = useState('Heroic stance, beak raised high');
+  const [mood, setMood] = useState('Quiet Wonder');
+  const [lighting, setLighting] = useState('Soft morning light with ambient warmth');
+  const [pose, setPose] = useState('Heroic stance, looking upward');
 
   // Generation state
   const [isGenerating, setIsGenerating] = useState(false);
@@ -92,9 +82,9 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
       styleCohesion: 24,
     },
     driftObservations: [
-      'Beak curvature and orange vinyl tone match master reference within 99% accuracy.',
-      'Red knit scarf texture and fringe position preserved with zero color bleed.',
-      'Miniature explorer fedora leather grain and gold ribbon orientation consistent.',
+      'Facial structure and orange beak tone match the reference sheet.',
+      'Red knit scarf texture and fringe position preserved without drift.',
+      'Explorer fedora leather tone and band match the reference model.',
     ],
     verdict: 'Excellent Match',
     remedyPromptAdditions: 'Maintain high weighting on primary visual tokens.',
@@ -132,7 +122,6 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
       setVariations(generated);
       setSelectedVariationIndex(0);
 
-      // Run Gemini Vision Consistency audit on the first variation
       runConsistencyAudit(generated[0].imageUrl);
     } catch (err) {
       console.error('Error generating covers:', err);
@@ -212,57 +201,53 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
   };
 
   return (
-    <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
-      {/* Top Header & Character Anchor Reminder */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+    <div className="p-8 lg:p-12 max-w-[1200px] mx-auto w-full space-y-10">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E8E4DE] pb-8">
         <div>
-          <div className="flex items-center gap-2 text-indigo-400 font-semibold text-xs tracking-wider uppercase">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Character-Consistent Cover Engine</span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-1">
-            Create Book Cover (6x9 Ratio)
+          <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+            Cover Studio
+          </span>
+          <h1 className="font-['Playfair_Display'] text-3xl lg:text-4xl font-normal text-[#1C1B1A] mt-2">
+            Create Cover
           </h1>
-          <p className="text-zinc-400 text-sm mt-1 max-w-xl">
-            Generates 4 portrait variations with your character's facial structure and signature wardrobe locked by Gemini.
+          <p className="text-[#6B6763] text-sm mt-2 max-w-xl leading-relaxed">
+            Generate 4 variations in standard 6x9 book proportion with consistent character identity, custom typography, and verification.
           </p>
         </div>
 
-        {/* Active Character Anchor Capsule */}
-        <div className="flex items-center gap-3 p-2.5 rounded-2xl bg-zinc-900 border border-zinc-800 shadow-sm">
+        {/* Active Character Pill */}
+        <div className="flex items-center gap-3 p-3 rounded-[10px] bg-white border border-[#E8E4DE]">
           <img
             src={activeCharacter.referenceImages[0] || activeCharacter.characterSheet.frontView}
             alt={activeCharacter.name}
-            className="w-12 h-14 rounded-xl object-cover bg-zinc-950 border border-amber-400/50"
+            className="w-10 h-13 rounded-[6px] object-cover bg-[#FAF8F5] border border-[#E8E4DE]"
           />
-          <div className="pr-2">
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-white">{activeCharacter.name}</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-400 font-semibold border border-emerald-500/30">
-                Locked
-              </span>
+          <div className="pr-1">
+            <div className="text-xs font-semibold text-[#1C1B1A]">
+              {activeCharacter.name}
             </div>
-            <p className="text-[11px] text-zinc-400 truncate max-w-[180px]">
-              {activeCharacter.signatureClothing.split(',')[0]}
-            </p>
+            <div className="text-[11px] text-[#6B6763]">
+              Active character
+            </div>
             <button
               onClick={onNavigateToCharacters}
-              className="text-[10px] text-indigo-400 hover:text-indigo-300 font-medium underline mt-0.5"
+              className="text-[11px] text-[#B4553A] hover:underline font-medium mt-0.5 inline-block"
             >
-              Switch Character
+              Change
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Studio Grid: Left Controls (Inputs & Typography), Right (Live Preview Canvas & Consistency) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Form Controls (5 cols) */}
+      {/* Main Studio Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Form Controls (5 columns) */}
         <div className="lg:col-span-5 space-y-6">
-          {/* Genre Tabs */}
+          {/* Genre Selection */}
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-              Select Book Genre
+            <label className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+              Genre
             </label>
             <div className="grid grid-cols-3 gap-2">
               {(Object.keys(GENRE_PRESETS) as GenreType[]).map((g) => {
@@ -272,10 +257,10 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                     key={g}
                     type="button"
                     onClick={() => handleGenreChange(g)}
-                    className={`py-2 px-2.5 rounded-xl text-xs font-bold transition-all text-center truncate ${
+                    className={`py-2 px-2.5 rounded-[8px] text-xs font-medium transition-colors text-center truncate ${
                       isSelected
-                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 ring-1 ring-indigo-400'
-                        : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800'
+                        ? 'bg-[#1C1B1A] text-white'
+                        : 'bg-white text-[#6B6763] hover:text-[#1C1B1A] border border-[#E8E4DE]'
                     }`}
                   >
                     {GENRE_PRESETS[g].label}
@@ -286,156 +271,151 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
           </div>
 
           {/* Book Metadata */}
-          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-              <Type className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Book Details & Typography Text</span>
-            </h3>
+          <div className="p-6 rounded-[10px] bg-white border border-[#E8E4DE] space-y-4">
+            <div className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+              Book Details
+            </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-zinc-400">Book Title</label>
+              <label className="text-xs font-medium text-[#1C1B1A]">Title</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500 font-bold"
+                className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-zinc-400">Subtitle / Series Line</label>
+              <label className="text-xs font-medium text-[#1C1B1A]">Subtitle</label>
               <input
                 type="text"
                 value={subtitle}
                 onChange={(e) => setSubtitle(e.target.value)}
-                className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
               />
             </div>
 
             <div>
-              <label className="text-[11px] font-semibold text-zinc-400">Author Name</label>
+              <label className="text-xs font-medium text-[#1C1B1A]">Author name</label>
               <input
                 type="text"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
-                className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
               />
             </div>
           </div>
 
-          {/* Scene, Environment & Pose */}
-          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Scene & Cinematic Lighting</span>
-            </h3>
+          {/* Scene and Setting */}
+          <div className="p-6 rounded-[10px] bg-white border border-[#E8E4DE] space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                Scene & Setting
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  const presets = GENRE_PRESETS[genre].sampleScenes;
+                  const random = presets[Math.floor(Math.random() * presets.length)];
+                  setScenePrompt(random);
+                }}
+                className="text-xs text-[#B4553A] hover:underline"
+              >
+                Sample prompt
+              </button>
+            </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <label className="text-[11px] font-semibold text-zinc-400">Scene Description</label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const presets = GENRE_PRESETS[genre].sampleScenes;
-                    const random = presets[Math.floor(Math.random() * presets.length)];
-                    setScenePrompt(random);
-                  }}
-                  className="text-[10px] text-indigo-400 hover:text-indigo-300 flex items-center gap-1"
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  <span>Random Preset</span>
-                </button>
-              </div>
+              <label className="text-xs font-medium text-[#1C1B1A]">Scene description</label>
               <textarea
                 rows={3}
                 value={scenePrompt}
                 onChange={(e) => setScenePrompt(e.target.value)}
-                className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500 resize-none leading-relaxed"
+                className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A] resize-none"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] font-semibold text-zinc-400">Color Mood</label>
+                <label className="text-xs font-medium text-[#1C1B1A]">Mood</label>
                 <input
                   type="text"
                   value={mood}
                   onChange={(e) => setMood(e.target.value)}
-                  className="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                  className="w-full mt-1 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-semibold text-zinc-400">Pose / Action</label>
+                <label className="text-xs font-medium text-[#1C1B1A]">Pose</label>
                 <input
                   type="text"
                   value={pose}
                   onChange={(e) => setPose(e.target.value)}
-                  className="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                  className="w-full mt-1 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                 />
               </div>
             </div>
           </div>
 
-          {/* Typography Customization Sliders */}
-          <div className="p-5 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-4">
+          {/* Typography Controls */}
+          <div className="p-6 rounded-[10px] bg-white border border-[#E8E4DE] space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-                <SlidersHorizontal className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Typography Layer Styling</span>
-              </h3>
+              <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                Typography overlay
+              </span>
               <button
                 type="button"
                 onClick={() => setTypography(GENRE_PRESETS[genre].defaultTypography)}
-                className="text-[10px] text-zinc-400 hover:text-white"
+                className="text-xs text-[#6B6763] hover:text-[#1C1B1A]"
               >
-                Reset to Genre Default
+                Reset
               </button>
             </div>
 
-            {/* Font Selector */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-[11px] text-zinc-400">Title Font Family</label>
+                <label className="text-xs font-medium text-[#1C1B1A]">Title font</label>
                 <select
                   value={typography.titleFont}
                   onChange={(e) => setTypography({ ...typography, titleFont: e.target.value })}
-                  className="w-full mt-1 px-2.5 py-1.5 rounded-lg bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                  className="w-full mt-1 px-2.5 py-1.5 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                 >
-                  <option value="Cinzel">Cinzel (Fantasy / Myth)</option>
-                  <option value="Playfair Display">Playfair Display (Romance / Literary)</option>
-                  <option value="Oswald">Oswald (Thriller / Action)</option>
-                  <option value="Orbitron">Orbitron (Sci-Fi / Cyber)</option>
-                  <option value="Fredoka">Fredoka (Children / Cartoon)</option>
-                  <option value="Space Grotesk">Space Grotesk (Modern Tech)</option>
+                  <option value="Playfair Display">Playfair Display</option>
+                  <option value="Cinzel">Cinzel</option>
+                  <option value="Oswald">Oswald</option>
+                  <option value="Orbitron">Orbitron</option>
+                  <option value="Fredoka">Fredoka</option>
+                  <option value="Space Grotesk">Space Grotesk</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-[11px] text-zinc-400">Title Color</label>
+                <label className="text-xs font-medium text-[#1C1B1A]">Title color</label>
                 <div className="flex items-center gap-2 mt-1">
                   <input
                     type="color"
                     value={typography.titleColor}
                     onChange={(e) => setTypography({ ...typography, titleColor: e.target.value })}
-                    className="w-8 h-8 rounded border border-zinc-700 bg-transparent cursor-pointer"
+                    className="w-7 h-7 rounded-[4px] border border-[#E8E4DE] bg-transparent cursor-pointer"
                   />
                   <input
                     type="text"
                     value={typography.titleColor}
                     onChange={(e) => setTypography({ ...typography, titleColor: e.target.value })}
-                    className="flex-1 px-2 py-1 rounded bg-zinc-950 border border-zinc-800 text-white text-xs font-mono"
+                    className="flex-1 px-2 py-1 rounded-[6px] bg-[#FAF8F5] border border-[#E8E4DE] text-[#1C1B1A] text-xs font-mono"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Title Sliders: Size, Vertical Position */}
-            <div className="space-y-3">
+            {/* Sliders */}
+            <div className="space-y-3 pt-1">
               <div>
-                <div className="flex justify-between text-[11px] text-zinc-400">
-                  <span>Title Size</span>
-                  <span className="font-mono">{typography.titleSize}px</span>
+                <div className="flex justify-between text-xs text-[#6B6763]">
+                  <span>Title size</span>
+                  <span>{typography.titleSize}px</span>
                 </div>
                 <input
                   type="range"
@@ -443,14 +423,14 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                   max="80"
                   value={typography.titleSize}
                   onChange={(e) => setTypography({ ...typography, titleSize: Number(e.target.value) })}
-                  className="w-full accent-indigo-500 h-1.5 bg-zinc-950 rounded-lg cursor-pointer"
+                  className="w-full accent-[#B4553A] h-1.5 bg-[#FAF8F5] rounded-lg cursor-pointer mt-1"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-[11px] text-zinc-400">
-                  <span>Title Vertical Position (Y)</span>
-                  <span className="font-mono">{typography.titleY}%</span>
+                <div className="flex justify-between text-xs text-[#6B6763]">
+                  <span>Title vertical position</span>
+                  <span>{typography.titleY}%</span>
                 </div>
                 <input
                   type="range"
@@ -458,14 +438,14 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                   max="85"
                   value={typography.titleY}
                   onChange={(e) => setTypography({ ...typography, titleY: Number(e.target.value) })}
-                  className="w-full accent-indigo-500 h-1.5 bg-zinc-950 rounded-lg cursor-pointer"
+                  className="w-full accent-[#B4553A] h-1.5 bg-[#FAF8F5] rounded-lg cursor-pointer mt-1"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between text-[11px] text-zinc-400">
-                  <span>Author Position (Y)</span>
-                  <span className="font-mono">{typography.authorY}%</span>
+                <div className="flex justify-between text-xs text-[#6B6763]">
+                  <span>Author position</span>
+                  <span>{typography.authorY}%</span>
                 </div>
                 <input
                   type="range"
@@ -473,62 +453,59 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                   max="95"
                   value={typography.authorY}
                   onChange={(e) => setTypography({ ...typography, authorY: Number(e.target.value) })}
-                  className="w-full accent-indigo-500 h-1.5 bg-zinc-950 rounded-lg cursor-pointer"
+                  className="w-full accent-[#B4553A] h-1.5 bg-[#FAF8F5] rounded-lg cursor-pointer mt-1"
                 />
               </div>
             </div>
           </div>
 
-          {/* Master Generate Button */}
+          {/* Primary Action Button */}
           <button
             type="button"
             onClick={() => handleGenerateCovers()}
             disabled={isGenerating}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 disabled:opacity-50 text-white font-extrabold text-base shadow-xl shadow-indigo-600/30 flex items-center justify-center gap-3 transition-all cursor-pointer"
+            className="w-full py-3.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white font-medium text-sm hover:opacity-95 disabled:opacity-50 transition-opacity cursor-pointer"
           >
-            {isGenerating ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Conditioning Character & Generating 4 Variations...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-5 h-5 text-amber-300" />
-                <span>Generate 4 Cover Variations (6x9 Ratio)</span>
-              </>
-            )}
+            {isGenerating ? 'Creating your cover...' : 'Create cover (4 variations)'}
           </button>
+
+          {/* Quiet thin loading progress indicator */}
+          {isGenerating && (
+            <div className="space-y-1.5">
+              <div className="w-full h-[2px] bg-[#E8E4DE] rounded-full overflow-hidden">
+                <div className="h-full bg-[#B4553A] animate-pulse w-3/4 rounded-full" />
+              </div>
+              <p className="text-xs text-[#6B6763] text-center">
+                Preserving character identity and generating 6x9 variations
+              </p>
+            </div>
+          )}
         </div>
 
-        {/* Right Live Canvas & Consistency Inspector (7 cols) */}
+        {/* Right Stage: 6x9 Book Preview & Consistency Bar (7 columns) */}
         <div className="lg:col-span-7 space-y-6">
-          {/* Main 6x9 Book Cover Composite Stage */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 lg:p-7 flex flex-col items-center">
-            <div className="w-full flex items-center justify-between mb-4">
-              <span className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-                <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Live Typographic Cover Preview (6x9 Book Ratio)</span>
+          {/* Main 6x9 Book Cover Container */}
+          <div className="bg-white border border-[#E8E4DE] rounded-[10px] p-6 lg:p-8 flex flex-col items-center">
+            <div className="w-full flex items-center justify-between mb-6">
+              <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                Preview (6x9 Ratio)
               </span>
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleSaveCover}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    savedCoverSuccess
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-200'
-                  }`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] hover:bg-[#FAF8F5] text-xs font-medium transition-colors"
                 >
                   {savedCoverSuccess ? (
                     <>
-                      <Check className="w-3.5 h-3.5" />
-                      <span>Saved!</span>
+                      <Check className="w-3.5 h-3.5 text-[#B4553A]" strokeWidth={1.5} />
+                      <span>Saved</span>
                     </>
                   ) : (
                     <>
-                      <Bookmark className="w-3.5 h-3.5" />
-                      <span>Save to Gallery</span>
+                      <Bookmark className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>Save to gallery</span>
                     </>
                   )}
                 </button>
@@ -536,24 +513,24 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                 <button
                   type="button"
                   onClick={handleDownload}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-md shadow-indigo-600/20 transition-all"
+                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white text-xs font-medium hover:opacity-95 transition-opacity"
                 >
-                  <Download className="w-3.5 h-3.5" />
-                  <span>Download PNG</span>
+                  <Download className="w-3.5 h-3.5" strokeWidth={1.5} />
+                  <span>Download</span>
                 </button>
               </div>
             </div>
 
-            {/* The Live 6x9 Book Cover Container with Editable Typography Overlay */}
-            <div className="relative w-full max-w-[340px] aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl shadow-black/80 border border-zinc-700/80 group select-none">
-              {/* Background Cover Image */}
+            {/* True 6x9 Book Display */}
+            <div className="relative w-full max-w-[340px] aspect-[2/3] rounded-[6px] overflow-hidden shadow-sm border border-[#E8E4DE] select-none bg-[#FAF8F5]">
+              {/* Background Art */}
               <img
                 src={currentCoverImage}
                 alt={title}
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               />
 
-              {/* Subtitle Overlay */}
+              {/* Subtitle */}
               {typography.showSubtitle && subtitle && (
                 <div
                   style={{
@@ -565,31 +542,31 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                     textShadow: typography.shadowBlur ? `0 2px ${typography.shadowBlur}px ${typography.shadowColor}` : 'none',
                     WebkitTextStroke: typography.strokeWidth ? `${typography.strokeWidth * 0.4}px ${typography.strokeColor}` : 'none',
                   }}
-                  className="absolute inset-x-4 text-center font-semibold pointer-events-none transition-all"
+                  className="absolute inset-x-4 text-center font-medium pointer-events-none transition-all"
                 >
                   {subtitle}
                 </div>
               )}
 
-              {/* Main Title Overlay */}
+              {/* Main Title */}
               <div
                 style={{
                   top: `${typography.titleY}%`,
-                  fontFamily: `"${typography.titleFont}", sans-serif`,
+                  fontFamily: `"${typography.titleFont}", serif`,
                   fontSize: `${(typography.titleSize / 100) * 48}px`,
                   color: typography.titleColor,
                   letterSpacing: `${typography.titleTracking}px`,
                   textShadow: typography.shadowBlur ? `0 4px ${typography.shadowBlur}px ${typography.shadowColor}` : 'none',
                   WebkitTextStroke: typography.strokeWidth ? `${typography.strokeWidth * 0.5}px ${typography.strokeColor}` : 'none',
                 }}
-                className={`absolute inset-x-4 text-center font-extrabold leading-tight pointer-events-none transition-all ${
+                className={`absolute inset-x-4 text-center font-normal leading-tight pointer-events-none transition-all ${
                   typography.titleCase === 'uppercase' ? 'uppercase' : 'capitalize'
                 }`}
               >
                 {title}
               </div>
 
-              {/* Author Overlay */}
+              {/* Author */}
               <div
                 style={{
                   top: `${typography.authorY}%`,
@@ -600,29 +577,28 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                   textShadow: typography.shadowBlur ? `0 2px ${typography.shadowBlur}px ${typography.shadowColor}` : 'none',
                   WebkitTextStroke: typography.strokeWidth ? `${typography.strokeWidth * 0.4}px ${typography.strokeColor}` : 'none',
                 }}
-                className="absolute inset-x-4 text-center font-bold uppercase pointer-events-none transition-all"
+                className="absolute inset-x-4 text-center font-medium uppercase pointer-events-none transition-all"
               >
                 {authorName}
               </div>
 
-              {/* Spine edge illusion */}
-              <div className="absolute inset-y-0 left-0 w-3 bg-gradient-to-r from-black/60 to-transparent pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-black/40 to-transparent pointer-events-none" />
+              {/* Subtle book spine edge highlight */}
+              <div className="absolute inset-y-0 left-0 w-2.5 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
             </div>
 
-            <p className="text-[11px] text-zinc-500 mt-4 text-center">
-              Standard 6x9 Paperback Aspect Ratio. High-resolution export composites background art and typographic layers into a lossless PNG.
+            <p className="text-xs text-[#6B6763] mt-4 text-center">
+              Paperback 6x9 format. PNG export combines background illustration and typography layer at full print resolution.
             </p>
           </div>
 
-          {/* 4 Generated Variations Picker */}
+          {/* 4 Generated Variations */}
           {variations.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-300">
-                  Select from 4 Generated Variations
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                  Variations
                 </span>
-                <span className="text-xs text-indigo-400">Click to preview & audit</span>
+                <span className="text-xs text-[#6B6763]">Select to view and edit</span>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -635,21 +611,13 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
                         setSelectedVariationIndex(idx);
                         runConsistencyAudit(v.imageUrl);
                       }}
-                      className={`group relative rounded-2xl overflow-hidden border cursor-pointer transition-all aspect-[2/3] bg-zinc-950 ${
+                      className={`rounded-[8px] overflow-hidden border cursor-pointer transition-all aspect-[2/3] bg-[#FAF8F5] ${
                         isSelected
-                          ? 'border-indigo-500 ring-2 ring-indigo-500/50 shadow-lg'
-                          : 'border-zinc-800 hover:border-zinc-600'
+                          ? 'border-[#B4553A] ring-1 ring-[#B4553A]/40'
+                          : 'border-[#E8E4DE] hover:border-[#D2CDC5]'
                       }`}
                     >
                       <img src={v.imageUrl} alt={v.variationLabel} className="w-full h-full object-cover" />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent p-2 text-center">
-                        <span className="text-[10px] font-bold text-white block truncate">
-                          {v.variationLabel}
-                        </span>
-                        <span className="text-[9px] text-emerald-400 font-semibold">
-                          {v.consistencyEstimate}% Fidelity
-                        </span>
-                      </div>
                     </div>
                   );
                 })}
@@ -657,126 +625,57 @@ export const CoverCreator: React.FC<CoverCreatorProps> = ({
             </div>
           )}
 
-          {/* Gemini Vision Consistency Check Card */}
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 space-y-4">
+          {/* Consistency Score: Simple Thin Progress Bar */}
+          <div className="bg-white border border-[#E8E4DE] rounded-[10px] p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-white">
-                    Gemini Vision Consistency Audit
-                  </h3>
-                  <p className="text-[11px] text-zinc-400">
-                    Comparing candidate cover directly against master reference
-                  </p>
-                </div>
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                  Character Consistency
+                </span>
+                <p className="text-xs text-[#6B6763] mt-0.5">
+                  Comparison against reference sheet
+                </p>
               </div>
 
-              <div className="flex items-center gap-3">
-                {isAuditingConsistency ? (
-                  <div className="flex items-center gap-2 text-xs text-indigo-400">
-                    <div className="w-3.5 h-3.5 border-2 border-indigo-400/30 border-t-indigo-400 rounded-full animate-spin" />
-                    <span>Auditing...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-baseline gap-1">
-                    <span
-                      className={`text-2xl font-black ${
-                        consistencyReport.overallScore >= 88
-                          ? 'text-emerald-400'
-                          : consistencyReport.overallScore >= 75
-                          ? 'text-amber-400'
-                          : 'text-rose-400'
-                      }`}
-                    >
-                      {consistencyReport.overallScore}
-                    </span>
-                    <span className="text-xs text-zinc-500 font-bold">/ 100</span>
-                  </div>
-                )}
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-['Playfair_Display'] font-normal text-[#1C1B1A]">
+                  {consistencyReport.overallScore}
+                </span>
+                <span className="text-xs text-[#6B6763]">/ 100</span>
               </div>
             </div>
 
-            {/* 4-Metric Breakdown Progress Bars */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80">
-                <div className="text-[10px] text-zinc-500 uppercase">Facial Fidelity</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5">
-                  {consistencyReport.breakdown.facialFidelity} / 25
-                </div>
-                <div className="w-full bg-zinc-800 h-1 rounded-full mt-1.5 overflow-hidden">
-                  <div
-                    className="bg-emerald-500 h-full rounded-full"
-                    style={{ width: `${(consistencyReport.breakdown.facialFidelity / 25) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80">
-                <div className="text-[10px] text-zinc-500 uppercase">Feature Details</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5">
-                  {consistencyReport.breakdown.featureDetails} / 25
-                </div>
-                <div className="w-full bg-zinc-800 h-1 rounded-full mt-1.5 overflow-hidden">
-                  <div
-                    className="bg-emerald-500 h-full rounded-full"
-                    style={{ width: `${(consistencyReport.breakdown.featureDetails / 25) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80">
-                <div className="text-[10px] text-zinc-500 uppercase">Signature Wardrobe</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5">
-                  {consistencyReport.breakdown.clothingAccuracy} / 25
-                </div>
-                <div className="w-full bg-zinc-800 h-1 rounded-full mt-1.5 overflow-hidden">
-                  <div
-                    className="bg-emerald-500 h-full rounded-full"
-                    style={{ width: `${(consistencyReport.breakdown.clothingAccuracy / 25) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/80">
-                <div className="text-[10px] text-zinc-500 uppercase">Style Cohesion</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5">
-                  {consistencyReport.breakdown.styleCohesion} / 25
-                </div>
-                <div className="w-full bg-zinc-800 h-1 rounded-full mt-1.5 overflow-hidden">
-                  <div
-                    className="bg-emerald-500 h-full rounded-full"
-                    style={{ width: `${(consistencyReport.breakdown.styleCohesion / 25) * 100}%` }}
-                  />
-                </div>
-              </div>
+            {/* Simple Thin Progress Bar */}
+            <div className="w-full bg-[#FAF8F5] border border-[#E8E4DE] h-2 rounded-full overflow-hidden">
+              <div
+                className="bg-[#B4553A] h-full rounded-full transition-all duration-500"
+                style={{ width: `${consistencyReport.overallScore}%` }}
+              />
             </div>
 
-            {/* Drift observations list */}
-            <div className="space-y-1.5">
-              <span className="text-[11px] font-bold uppercase text-zinc-400">Drift Audit Notes:</span>
-              <ul className="space-y-1 text-xs text-zinc-300">
+            {/* Observations List */}
+            <div className="pt-2 space-y-2">
+              <span className="text-xs font-medium text-[#1C1B1A]">Notes:</span>
+              <ul className="space-y-1.5 text-xs text-[#6B6763]">
                 {consistencyReport.driftObservations.map((obs, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">•</span>
+                    <span className="text-[#B4553A] mt-0.5">•</span>
                     <span>{obs}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* One-click "Regenerate closer to reference" Button */}
+            {/* Regenerate Closer Button */}
             <div className="pt-2">
               <button
                 type="button"
                 onClick={() => handleGenerateCovers(consistencyReport.remedyPromptAdditions)}
                 disabled={isGenerating}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/30 text-xs font-bold transition-all"
+                className="w-full py-2.5 px-4 rounded-[8px] bg-white border border-[#E8E4DE] hover:bg-[#FAF8F5] text-[#1C1B1A] text-xs font-medium transition-colors flex items-center justify-center gap-2"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>Regenerate Closer to Reference (Inject Drift Remedies)</span>
+                <RefreshCw className="w-3.5 h-3.5 text-[#6B6763]" strokeWidth={1.5} />
+                <span>Regenerate closer to reference</span>
               </button>
             </div>
           </div>

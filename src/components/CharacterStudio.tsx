@@ -1,18 +1,13 @@
 import React, { useState } from 'react';
 import {
   Plus,
-  Sparkles,
   Upload,
-  Lock,
   Copy,
   Check,
-  CheckCircle2,
   Trash2,
-  Eye,
-  Sliders,
-  Palette,
   X,
-  FileText,
+  Sliders,
+  CheckCircle,
 } from 'lucide-react';
 import { Character, ArtStyle, CharacterSheetViews } from '../types';
 import { createQuackersSvg } from '../demoData';
@@ -87,7 +82,6 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
     setIsGenerating(true);
 
     try {
-      // Compile locked prompt via server API or fallback
       let lockedPrompt = '';
       let tagline = '';
 
@@ -118,12 +112,10 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
       }
 
       if (!lockedPrompt) {
-        lockedPrompt = `${formName}, ${formBuild || 'slender'}, with ${formHair || 'chestnut waves'}, ${formEyes || 'intense eyes'}, wearing ${formClothing || 'signature jacket'}, ${formFeatures || 'distinct charm'}. Rendered in ${formStyle} with consistent volumetric lighting, keeping exact facial symmetry and costume motifs across generations.`;
-        tagline = `${formPersonality || 'Intrepid'} ${formEthnicity || 'Adventurer'}`;
+        lockedPrompt = `${formName}, ${formBuild || 'slender build'}, with ${formHair || 'natural hair'}, ${formEyes || 'expressive eyes'}, wearing ${formClothing || 'signature outfit'}, ${formFeatures || 'distinct features'}. Rendered in ${formStyle} with consistent studio lighting, preserving exact facial geometry and signature elements across every cover.`;
+        tagline = `${formPersonality || 'Heroic'} ${formEthnicity || 'Adventurer'}`;
       }
 
-      // Generate visual sheet (either from uploaded image or procedural generator)
-      const primaryRef = uploadedImages[0] || createQuackersSvg({ theme: 'studio' });
       const sheet: CharacterSheetViews = {
         frontView: uploadedImages[0] || createQuackersSvg({ view: 'front', expression: 'neutral', theme: 'studio' }),
         sideView: uploadedImages[1] || createQuackersSvg({ view: 'side', expression: 'neutral', theme: 'studio' }),
@@ -136,16 +128,16 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
       const newChar: Character = {
         id: `char-${Date.now()}`,
         name: formName,
-        tagline: tagline || `${formName} Identity Sheet`,
-        age: formAge || 'Unknown',
+        tagline: tagline || `${formName} Character Sheet`,
+        age: formAge || 'Unspecified',
         genderOrArchetype: formPersonality || 'Protagonist',
         speciesOrEthnicity: formEthnicity || 'Human',
-        hair: formHair || 'Distinct styling',
-        eyes: formEyes || 'Expressive eyes',
-        build: formBuild || 'Medium build',
+        hair: formHair || 'Natural',
+        eyes: formEyes || 'Expressive',
+        build: formBuild || 'Medium',
         signatureClothing: formClothing || 'Signature outfit',
         distinguishingFeatures: formFeatures || 'None',
-        personalityMood: formPersonality || 'Heroic',
+        personalityMood: formPersonality || 'Determined',
         artStyle: formStyle,
         lockedVisualPrompt: lockedPrompt,
         referenceImages: uploadedImages.length > 0 ? uploadedImages : [sheet.frontView, sheet.threeQuarterView],
@@ -175,42 +167,39 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
   };
 
   return (
-    <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
-      {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+    <div className="p-8 lg:p-12 max-w-[1200px] mx-auto w-full space-y-10">
+      {/* Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E8E4DE] pb-8">
         <div>
-          <div className="flex items-center gap-2 text-indigo-400 font-semibold text-xs tracking-wider uppercase">
-            <Lock className="w-3.5 h-3.5" />
-            <span>Character Identity Lock</span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-1">
-            Character Studio & Library
+          <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+            Character Library
+          </span>
+          <h1 className="font-['Playfair_Display'] text-3xl lg:text-4xl font-normal text-[#1C1B1A] mt-2">
+            Characters & Reference Sheets
           </h1>
-          <p className="text-zinc-400 text-sm mt-1 max-w-2xl">
-            Create your character once with multi-angle reference sheets. Their locked visual prompt is automatically injected into all future book covers to prevent facial, hair, and costume drift.
+          <p className="text-[#6B6763] text-sm mt-2 max-w-2xl leading-relaxed">
+            Create characters once with multi-angle reference sheets. Their locked visual description is reused across every book cover to keep faces, wardrobe, and style consistent.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Create New Character</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white text-sm font-medium hover:opacity-95 transition-opacity self-start md:self-auto cursor-pointer"
+        >
+          <Plus className="w-4 h-4" strokeWidth={1.5} />
+          <span>New character</span>
+        </button>
       </div>
 
-      {/* Main Grid: Library on Left, Selected Character Sheet on Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Character Library Cards */}
+      {/* Main Two-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Characters List */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-zinc-300 uppercase tracking-wider">
-              Saved Characters ({characters.length})
-            </h2>
-            <span className="text-xs text-zinc-500">Click to view sheet</span>
+          <div className="flex items-center justify-between pb-1">
+            <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+              All Characters ({characters.length})
+            </span>
+            <span className="text-xs text-[#6B6763]">Select to view sheet</span>
           </div>
 
           <div className="space-y-3">
@@ -222,79 +211,77 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
                 <div
                   key={char.id}
                   onClick={() => setSelectedForInspection(char)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer relative ${
+                  className={`p-4 rounded-[10px] border transition-all cursor-pointer bg-white ${
                     isSelected
-                      ? 'bg-zinc-900 border-indigo-500/80 shadow-md shadow-indigo-500/10 ring-1 ring-indigo-500/50'
-                      : 'bg-zinc-900/60 border-zinc-800 hover:bg-zinc-900 hover:border-zinc-700'
+                      ? 'border-[#B4553A] ring-1 ring-[#B4553A]/30 shadow-sm'
+                      : 'border-[#E8E4DE] hover:border-[#D2CDC5]'
                   }`}
                 >
                   <div className="flex items-start gap-4">
                     <img
                       src={char.referenceImages[0] || char.characterSheet.frontView}
                       alt={char.name}
-                      className="w-16 h-20 rounded-xl object-cover bg-zinc-950 border border-zinc-700/80 shrink-0 shadow-sm"
+                      className="w-16 h-22 rounded-[8px] object-cover bg-[#FAF8F5] border border-[#E8E4DE] shrink-0"
                     />
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-base font-bold text-white truncate">
+                        <h3 className="font-['Playfair_Display'] text-lg font-normal text-[#1C1B1A] truncate">
                           {char.name}
                         </h3>
                         {isActive && (
-                          <span className="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[11px] font-bold border border-emerald-500/30 shrink-0">
+                          <span className="text-[11px] font-medium text-[#B4553A] bg-[#FAF8F5] border border-[#E8E4DE] px-2 py-0.5 rounded-[6px] shrink-0">
                             Active
                           </span>
                         )}
                       </div>
 
-                      <p className="text-xs text-indigo-400 font-medium truncate mt-0.5">
+                      <p className="text-xs text-[#6B6763] truncate mt-1">
                         {char.tagline}
                       </p>
 
-                      <div className="flex flex-wrap gap-1.5 mt-2.5">
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">
+                      <div className="flex flex-wrap gap-1.5 mt-3">
+                        <span className="text-[11px] px-2 py-0.5 rounded-[6px] bg-[#FAF8F5] text-[#6B6763] border border-[#E8E4DE]">
                           {char.artStyle.replace(/-/g, ' ')}
                         </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-800/80 text-zinc-400 border border-zinc-800">
+                        <span className="text-[11px] px-2 py-0.5 rounded-[6px] bg-[#FAF8F5] text-[#6B6763] border border-[#E8E4DE] truncate max-w-[140px]">
                           {char.signatureClothing.split(',')[0]}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Actions Bar */}
-                  <div className="mt-3 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                  {/* Card Actions */}
+                  <div className="mt-4 pt-3 border-t border-[#E8E4DE] flex items-center justify-between text-xs">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onSelectActiveCharacter(char);
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-all ${
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium transition-colors ${
                         isActive
-                          ? 'text-emerald-400 bg-emerald-950/40 border border-emerald-800/50'
-                          : 'text-zinc-300 hover:text-white bg-zinc-800 hover:bg-zinc-700'
+                          ? 'text-[#B4553A] bg-[#FAF8F5] border border-[#E8E4DE]'
+                          : 'text-[#1C1B1A] bg-white border border-[#E8E4DE] hover:bg-[#FAF8F5]'
                       }`}
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>{isActive ? 'Active for Covers' : 'Set as Active'}</span>
+                      <CheckCircle className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>{isActive ? 'Current active' : 'Set as active'}</span>
                     </button>
 
-                    <div className="flex items-center gap-2">
-                      {characters.length > 1 && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            if (confirm(`Delete character "${char.name}"?`)) {
-                              onDeleteCharacter(char.id);
-                            }
-                          }}
-                          className="p-1.5 text-zinc-500 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
-                          title="Delete character"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
+                    {characters.length > 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (confirm(`Remove character "${char.name}"?`)) {
+                            onDeleteCharacter(char.id);
+                          }
+                        }}
+                        className="p-1.5 text-[#6B6763] hover:text-[#B4553A] rounded-[6px] hover:bg-[#FAF8F5] transition-colors"
+                        title="Delete character"
+                      >
+                        <Trash2 className="w-4 h-4" strokeWidth={1.5} />
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -302,21 +289,19 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
           </div>
         </div>
 
-        {/* Right Column: Detailed Character Sheet Inspector */}
+        {/* Right Column: Character Reference Sheet */}
         <div className="lg:col-span-7 space-y-6">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-6 lg:p-7 space-y-6">
-            {/* Header info */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-800 pb-5">
+          <div className="bg-white border border-[#E8E4DE] rounded-[10px] p-6 lg:p-8 space-y-8">
+            {/* Sheet Title Bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8E4DE] pb-6">
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-2xl font-black text-white">
-                    {selectedForInspection.name}
-                  </h2>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                    Character Sheet
-                  </span>
-                </div>
-                <p className="text-zinc-400 text-sm mt-0.5">
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                  Reference Sheet
+                </span>
+                <h2 className="font-['Playfair_Display'] text-2xl font-normal text-[#1C1B1A] mt-1">
+                  {selectedForInspection.name}
+                </h2>
+                <p className="text-xs text-[#6B6763] mt-1">
                   {selectedForInspection.tagline}
                 </p>
               </div>
@@ -326,42 +311,40 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
                   onSelectActiveCharacter(selectedForInspection);
                   onNavigateToCover();
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/20"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] hover:bg-[#FAF8F5] text-xs font-medium transition-colors"
               >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Generate Covers with {selectedForInspection.name.split(' ')[0]}</span>
+                <span>Create cover with this character</span>
               </button>
             </div>
 
             {/* 6-Angle Character Sheet Grid */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-zinc-300 flex items-center gap-1.5">
-                  <Eye className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Multi-Angle Reference Sheet & Expressions</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                  Canonical Views & Expressions
                 </span>
-                <span className="text-[11px] text-zinc-500">6 Verified Canonical Angles</span>
+                <span className="text-xs text-[#6B6763]">6 Angle Reference</span>
               </div>
 
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2.5">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
                 {[
-                  { label: 'Front View', img: selectedForInspection.characterSheet.frontView },
-                  { label: 'Side Profile', img: selectedForInspection.characterSheet.sideView },
-                  { label: '3/4 Perspective', img: selectedForInspection.characterSheet.threeQuarterView },
+                  { label: 'Front', img: selectedForInspection.characterSheet.frontView },
+                  { label: 'Profile', img: selectedForInspection.characterSheet.sideView },
+                  { label: 'Three-quarter', img: selectedForInspection.characterSheet.threeQuarterView },
                   { label: 'Neutral', img: selectedForInspection.characterSheet.expressionNeutral },
                   { label: 'Determined', img: selectedForInspection.characterSheet.expressionDetermined },
-                  { label: 'Smiling / Joy', img: selectedForInspection.characterSheet.expressionSmilingOrFierce },
+                  { label: 'Smiling', img: selectedForInspection.characterSheet.expressionSmilingOrFierce },
                 ].map((item, idx) => (
                   <div
                     key={idx}
-                    className="group relative rounded-xl bg-zinc-950 border border-zinc-800 p-1.5 flex flex-col items-center hover:border-zinc-700 transition-all"
+                    className="rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE] p-2 flex flex-col items-center"
                   >
                     <img
                       src={item.img}
                       alt={item.label}
-                      className="w-full aspect-[2/3] object-cover rounded-lg bg-zinc-900 border border-zinc-800/80"
+                      className="w-full aspect-[2/3] object-cover rounded-[6px] bg-white border border-[#E8E4DE]"
                     />
-                    <span className="text-[10px] font-semibold text-zinc-400 mt-1.5 truncate text-center w-full">
+                    <span className="text-[11px] text-[#6B6763] mt-2 text-center truncate w-full">
                       {item.label}
                     </span>
                   </div>
@@ -370,62 +353,61 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
             </div>
 
             {/* Locked Visual Description Box */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5" />
-                  <span>Locked Visual Description (Prompt Anchor)</span>
-                </label>
+                <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+                  Locked Visual Description
+                </span>
 
                 <button
                   onClick={handleCopyLockedPrompt}
-                  className="flex items-center gap-1 text-xs text-zinc-400 hover:text-white px-2 py-1 rounded bg-zinc-800 hover:bg-zinc-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#6B6763] hover:text-[#1C1B1A] px-2.5 py-1 rounded-[6px] bg-[#FAF8F5] border border-[#E8E4DE] transition-colors"
                 >
                   {copiedPrompt ? (
                     <>
-                      <Check className="w-3.5 h-3.5 text-emerald-400" />
-                      <span className="text-emerald-400">Copied</span>
+                      <Check className="w-3.5 h-3.5 text-[#B4553A]" strokeWidth={1.5} />
+                      <span className="text-[#B4553A]">Copied</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5" />
-                      <span>Copy Anchor</span>
+                      <Copy className="w-3.5 h-3.5" strokeWidth={1.5} />
+                      <span>Copy</span>
                     </>
                   )}
                 </button>
               </div>
 
-              <div className="p-4 rounded-xl bg-zinc-950 border border-amber-500/30 text-xs text-zinc-300 font-mono leading-relaxed relative">
+              <div className="p-4 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE] text-xs text-[#1C1B1A] leading-relaxed">
                 {selectedForInspection.lockedVisualPrompt}
               </div>
-              <p className="text-[11px] text-zinc-500">
-                This exact prompt block is injected into every Gemini cover request alongside reference image conditioning to guarantee consistent physical structure.
+              <p className="text-xs text-[#6B6763]">
+                This locked visual profile is passed in every cover generation prompt to ensure physical traits and clothing remain identical across books.
               </p>
             </div>
 
-            {/* Physical Traits Breakdown */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-              <div className="p-3 rounded-xl bg-zinc-950/60 border border-zinc-800">
-                <div className="text-[10px] text-zinc-500 uppercase font-semibold">Species / Type</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5 truncate">
+            {/* Structured Specifications Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+              <div className="p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE]">
+                <div className="text-[10px] text-[#6B6763] uppercase tracking-[0.08em]">Archetype</div>
+                <div className="text-xs font-medium text-[#1C1B1A] mt-1 truncate">
                   {selectedForInspection.speciesOrEthnicity || 'Standard'}
                 </div>
               </div>
-              <div className="p-3 rounded-xl bg-zinc-950/60 border border-zinc-800">
-                <div className="text-[10px] text-zinc-500 uppercase font-semibold">Signature Wardrobe</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5 truncate">
+              <div className="p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE]">
+                <div className="text-[10px] text-[#6B6763] uppercase tracking-[0.08em]">Signature Wardrobe</div>
+                <div className="text-xs font-medium text-[#1C1B1A] mt-1 truncate">
                   {selectedForInspection.signatureClothing.split(',')[0]}
                 </div>
               </div>
-              <div className="p-3 rounded-xl bg-zinc-950/60 border border-zinc-800">
-                <div className="text-[10px] text-zinc-500 uppercase font-semibold">Eyes & Features</div>
-                <div className="text-xs font-bold text-zinc-200 mt-0.5 truncate">
+              <div className="p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE]">
+                <div className="text-[10px] text-[#6B6763] uppercase tracking-[0.08em]">Features</div>
+                <div className="text-xs font-medium text-[#1C1B1A] mt-1 truncate">
                   {selectedForInspection.eyes}
                 </div>
               </div>
-              <div className="p-3 rounded-xl bg-zinc-950/60 border border-zinc-800">
-                <div className="text-[10px] text-zinc-500 uppercase font-semibold">Art Style</div>
-                <div className="text-xs font-bold text-indigo-400 mt-0.5 truncate capitalize">
+              <div className="p-3 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE]">
+                <div className="text-[10px] text-[#6B6763] uppercase tracking-[0.08em]">Style</div>
+                <div className="text-xs font-medium text-[#1C1B1A] mt-1 truncate capitalize">
                   {selectedForInspection.artStyle.replace(/-/g, ' ')}
                 </div>
               </div>
@@ -434,64 +416,61 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
         </div>
       </div>
 
-      {/* CREATE NEW CHARACTER MODAL */}
+      {/* NEW CHARACTER MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl relative my-8">
+        <div className="fixed inset-0 z-50 bg-[#1C1B1A]/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-[#E8E4DE] rounded-[10px] w-full max-w-2xl overflow-hidden shadow-lg relative my-8">
             {/* Modal Header */}
-            <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
+            <div className="p-6 border-b border-[#E8E4DE] flex items-center justify-between">
               <div>
-                <h3 className="text-xl font-black text-white flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-indigo-400" />
-                  <span>Create New Character Profile</span>
+                <h3 className="font-['Playfair_Display'] text-2xl font-normal text-[#1C1B1A]">
+                  New Character
                 </h3>
-                <p className="text-xs text-zinc-400 mt-0.5">
-                  Set up a permanent character anchor with locked traits and multi-angle sheets.
+                <p className="text-xs text-[#6B6763] mt-1">
+                  Define permanent traits to generate a consistent character sheet.
                 </p>
               </div>
 
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800 transition-colors"
+                className="p-2 text-[#6B6763] hover:text-[#1C1B1A] rounded-[6px] hover:bg-[#FAF8F5] transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" strokeWidth={1.5} />
               </button>
             </div>
 
-            {/* Creation Mode Tabs: Option A vs Option B */}
-            <div className="px-6 pt-4 flex gap-2 border-b border-zinc-800">
+            {/* Mode Tabs */}
+            <div className="px-6 pt-4 flex gap-4 border-b border-[#E8E4DE]">
               <button
                 type="button"
                 onClick={() => setCreationMode('prompt')}
-                className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-2 ${
+                className={`pb-3 text-xs font-medium transition-colors border-b-2 ${
                   creationMode === 'prompt'
-                    ? 'border-indigo-500 text-indigo-400'
-                    : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                    ? 'border-[#B4553A] text-[#1C1B1A]'
+                    : 'border-transparent text-[#6B6763] hover:text-[#1C1B1A]'
                 }`}
               >
-                <Sliders className="w-3.5 h-3.5" />
-                <span>Option B: Describe in Text</span>
+                Describe in text
               </button>
 
               <button
                 type="button"
                 onClick={() => setCreationMode('upload')}
-                className={`pb-3 px-4 text-xs font-bold transition-all border-b-2 flex items-center gap-2 ${
+                className={`pb-3 text-xs font-medium transition-colors border-b-2 ${
                   creationMode === 'upload'
-                    ? 'border-indigo-500 text-indigo-400'
-                    : 'border-transparent text-zinc-400 hover:text-zinc-200'
+                    ? 'border-[#B4553A] text-[#1C1B1A]'
+                    : 'border-transparent text-[#6B6763] hover:text-[#1C1B1A]'
                 }`}
               >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Option A: Upload Reference Photos (1-3)</span>
+                Upload reference photos (1–3)
               </button>
             </div>
 
-            {/* Modal Form */}
+            {/* Form */}
             <form onSubmit={handleCreateCharacter} className="p-6 space-y-5">
               {creationMode === 'upload' && (
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-zinc-700 hover:border-indigo-500/80 rounded-2xl p-6 text-center cursor-pointer transition-colors bg-zinc-950/50 relative">
+                  <div className="border border-dashed border-[#E8E4DE] hover:border-[#B4553A] rounded-[8px] p-6 text-center cursor-pointer transition-colors bg-[#FAF8F5] relative">
                     <input
                       type="file"
                       accept="image/*"
@@ -499,26 +478,26 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
                       onChange={handleFileUpload}
                       className="absolute inset-0 opacity-0 cursor-pointer"
                     />
-                    <Upload className="w-8 h-8 text-zinc-400 mx-auto mb-2" />
-                    <p className="text-sm font-semibold text-zinc-200">
-                      Upload 1 to 3 reference images
+                    <Upload className="w-6 h-6 text-[#6B6763] mx-auto mb-2" strokeWidth={1.5} />
+                    <p className="text-sm font-medium text-[#1C1B1A]">
+                      Drop reference images here, or browse
                     </p>
-                    <p className="text-xs text-zinc-500 mt-1">
-                      Front face, 3/4 profile, or costume details (PNG, JPG, WebP)
+                    <p className="text-xs text-[#6B6763] mt-1">
+                      Front view, profile, or costume details (PNG, JPG)
                     </p>
                   </div>
 
                   {uploadedImages.length > 0 && (
                     <div className="grid grid-cols-3 gap-3">
                       {uploadedImages.map((src, i) => (
-                        <div key={i} className="relative rounded-xl overflow-hidden border border-zinc-700 aspect-[3/4] bg-zinc-950">
+                        <div key={i} className="relative rounded-[8px] overflow-hidden border border-[#E8E4DE] aspect-[3/4] bg-[#FAF8F5]">
                           <img src={src} alt={`Upload ${i}`} className="w-full h-full object-cover" />
                           <button
                             type="button"
                             onClick={() => setUploadedImages((prev) => prev.filter((_, idx) => idx !== i))}
-                            className="absolute top-1 right-1 p-1 bg-black/70 hover:bg-rose-600 text-white rounded-full transition-colors"
+                            className="absolute top-1 right-1 p-1 bg-white/90 text-[#1C1B1A] hover:text-[#B4553A] rounded-full shadow-sm"
                           >
-                            <X className="w-3.5 h-3.5" />
+                            <X className="w-3.5 h-3.5" strokeWidth={1.5} />
                           </button>
                         </div>
                       ))}
@@ -527,121 +506,118 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
                 </div>
               )}
 
-              {/* Core Information Inputs */}
+              {/* Character Details */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">Character Name *</label>
+                  <label className="text-xs font-medium text-[#1C1B1A]">Character name *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Captain Quackers, Mara Thorne"
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">Age / Archetype</label>
+                  <label className="text-xs font-medium text-[#1C1B1A]">Age or Archetype</label>
                   <input
                     type="text"
-                    placeholder="e.g. Mid-20s, Timeless Mascot, 40s Detective"
+                    placeholder="e.g. 20s, Mascot, Detective"
                     value={formAge}
                     onChange={(e) => setFormAge(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">Species / Ethnicity</label>
+                  <label className="text-xs font-medium text-[#1C1B1A]">Species / Ethnicity</label>
                   <input
                     type="text"
-                    placeholder="e.g. Yellow Duck, Nordic, Elf"
+                    placeholder="e.g. Rubber Duck, Human"
                     value={formEthnicity}
                     onChange={(e) => setFormEthnicity(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">Hair / Head Crest</label>
+                  <label className="text-xs font-medium text-[#1C1B1A]">Hair / Crest</label>
                   <input
                     type="text"
-                    placeholder="e.g. Short raven hair, Vinyl crest"
+                    placeholder="e.g. Dark waves, Yellow vinyl crest"
                     value={formHair}
                     onChange={(e) => setFormHair(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">Eyes & Expression</label>
+                  <label className="text-xs font-medium text-[#1C1B1A]">Eyes & Expression</label>
                   <input
                     type="text"
-                    placeholder="e.g. Amber eyes, Glossy black buttons"
+                    placeholder="e.g. Black button eyes, Amber eyes"
                     value={formEyes}
                     onChange={(e) => setFormEyes(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-xs focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-xs focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">
-                    Signature Clothing & Colors *
+                  <label className="text-xs font-medium text-[#1C1B1A]">
+                    Signature clothing & colors *
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Red knitted wool scarf, brown leather explorer fedora"
+                    placeholder="e.g. Red knitted wool scarf, brown leather fedora"
                     value={formClothing}
                     onChange={(e) => setFormClothing(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-zinc-300">
-                    Distinguishing Accessories & Personality
+                  <label className="text-xs font-medium text-[#1C1B1A]">
+                    Distinguishing accessories & mood
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Gold compass badge on hat, fearless cheerful spirit"
+                    placeholder="e.g. Gold compass badge on hat, cheerful spirit"
                     value={formFeatures}
                     onChange={(e) => setFormFeatures(e.target.value)}
-                    className="w-full mt-1 px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                    className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                   />
                 </div>
               </div>
 
-              {/* Art Style Selector */}
+              {/* Art Style */}
               <div>
-                <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 mb-1.5">
-                  <Palette className="w-3.5 h-3.5 text-indigo-400" />
-                  <span>Art Style Preset</span>
-                </label>
+                <label className="text-xs font-medium text-[#1C1B1A]">Art style</label>
                 <select
                   value={formStyle}
                   onChange={(e) => setFormStyle(e.target.value as ArtStyle)}
-                  className="w-full px-3 py-2 rounded-xl bg-zinc-950 border border-zinc-800 text-white text-sm focus:outline-none focus:border-indigo-500"
+                  className="w-full mt-1.5 px-3 py-2 rounded-[8px] bg-white border border-[#E8E4DE] text-[#1C1B1A] text-sm focus:outline-none focus:border-[#B4553A] focus:ring-1 focus:ring-[#B4553A]"
                 >
-                  <option value="whimsical-3d-digital">Whimsical 3D Digital Collectible (Pixar / Vinyl)</option>
-                  <option value="cinematic-photo">Cinematic Photo (Photorealistic & Dramatic)</option>
-                  <option value="epic-fantasy-oil">Epic Fantasy Oil Painting (Rich Textures)</option>
-                  <option value="digital-anime">Modern Digital Anime / Graphic</option>
-                  <option value="dark-noir-ink">Dark Noir Ink & Comic</option>
+                  <option value="whimsical-3d-digital">Whimsical 3D Collectible</option>
+                  <option value="cinematic-photo">Cinematic Photo</option>
+                  <option value="epic-fantasy-oil">Epic Fantasy Oil Painting</option>
+                  <option value="digital-anime">Digital Anime / Graphic</option>
+                  <option value="dark-noir-ink">Dark Noir Ink</option>
                   <option value="childrens-storybook-watercolor">Children's Storybook Watercolor</option>
                 </select>
               </div>
 
-              {/* Action Buttons */}
-              <div className="pt-4 border-t border-zinc-800 flex items-center justify-end gap-3">
+              {/* Modal Actions */}
+              <div className="pt-4 border-t border-[#E8E4DE] flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl text-zinc-400 hover:text-white text-sm font-medium"
+                  className="px-4 py-2 rounded-[8px] text-[#6B6763] hover:text-[#1C1B1A] text-sm font-medium"
                 >
                   Cancel
                 </button>
@@ -649,19 +625,9 @@ export const CharacterStudio: React.FC<CharacterStudioProps> = ({
                 <button
                   type="submit"
                   disabled={isGenerating || !formName.trim()}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition-all"
+                  className="px-5 py-2.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white font-medium text-sm hover:opacity-95 disabled:opacity-50 transition-opacity cursor-pointer"
                 >
-                  {isGenerating ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Locking Identity & Generating Sheet...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 text-amber-300" />
-                      <span>Lock Character & Generate Sheet</span>
-                    </>
-                  )}
+                  {isGenerating ? 'Generating character sheet...' : 'Save character'}
                 </button>
               </div>
             </form>

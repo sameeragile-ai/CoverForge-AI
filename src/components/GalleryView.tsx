@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import {
-  BookOpen,
   Download,
   Trash2,
-  ShieldCheck,
-  Eye,
-  Calendar,
   X,
-  Sparkles,
+  Eye,
 } from 'lucide-react';
 import { BookCover } from '../types';
 import { exportCompositeCover } from '../utils/canvasExport';
@@ -41,118 +37,117 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
   };
 
   return (
-    <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+    <div className="p-8 lg:p-12 max-w-[1200px] mx-auto w-full space-y-10">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-zinc-800 pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-[#E8E4DE] pb-8">
         <div>
-          <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs tracking-wider uppercase">
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>Master Cover Portfolio</span>
-          </div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-1">
-            Saved Book Cover Gallery ({covers.length})
+          <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
+            Portfolio
+          </span>
+          <h1 className="font-['Playfair_Display'] text-3xl lg:text-4xl font-normal text-[#1C1B1A] mt-2">
+            Cover Gallery
           </h1>
-          <p className="text-zinc-400 text-sm mt-1 max-w-xl">
-            Export ready-to-publish 6x9 print covers compositing high-resolution character background art with your custom typography.
+          <p className="text-[#6B6763] text-sm mt-2 max-w-xl leading-relaxed">
+            Archive of completed 6x9 book covers. Download print-ready high-resolution PNGs with composite typography.
           </p>
         </div>
 
         <button
           onClick={onNavigateToCreate}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-medium text-sm shadow-lg shadow-indigo-600/25 transition-all self-start md:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white text-sm font-medium hover:opacity-95 transition-opacity self-start md:self-auto cursor-pointer"
         >
-          <Sparkles className="w-4 h-4 text-amber-300" />
-          <span>Create New Cover</span>
+          <span>Create cover</span>
         </button>
       </div>
 
       {/* Empty State */}
       {covers.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-zinc-900 border border-zinc-800 max-w-md mx-auto my-12">
-          <BookOpen className="w-12 h-12 text-zinc-600 mx-auto mb-3" />
-          <h3 className="text-lg font-bold text-white">No Covers Saved Yet</h3>
-          <p className="text-zinc-400 text-xs mt-1">
-            Generate your first character-consistent cover in the studio and save it here.
+        <div className="p-12 text-center rounded-[10px] bg-white border border-[#E8E4DE] max-w-md mx-auto my-12">
+          <h3 className="font-['Playfair_Display'] text-xl font-normal text-[#1C1B1A]">
+            No covers saved yet
+          </h3>
+          <p className="text-[#6B6763] text-xs mt-2 leading-relaxed">
+            Generate and save book covers in the studio to build your series archive.
           </p>
           <button
             onClick={onNavigateToCreate}
-            className="mt-5 px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs"
+            className="mt-6 px-4 py-2 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white font-medium text-xs hover:opacity-95 transition-opacity"
           >
-            Open Cover Creator
+            Create first cover
           </button>
         </div>
       ) : (
-        /* Covers Grid */
+        /* Bookstore Shelf Grid */
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {covers.map((cover) => (
             <div
               key={cover.id}
-              className="group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-2xl overflow-hidden flex flex-col justify-between transition-all shadow-lg hover:shadow-2xl"
+              className="group bg-white border border-[#E8E4DE] hover:border-[#D2CDC5] rounded-[10px] p-3 flex flex-col justify-between transition-all hover:shadow-sm"
             >
-              {/* Cover Card Image Stage */}
+              {/* 6x9 Book Cover Container */}
               <div
                 onClick={() => setInspectingCover(cover)}
-                className="relative aspect-[2/3] overflow-hidden cursor-pointer bg-zinc-950"
+                className="relative aspect-[2/3] rounded-[6px] overflow-hidden cursor-pointer bg-[#FAF8F5] border border-[#E8E4DE]"
               >
                 <img
                   src={cover.imageUrl}
                   alt={cover.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover"
                 />
 
-                {/* Simulated typographic overlay on thumbnail */}
+                {/* Typography Overlay Simulation */}
                 <div className="absolute inset-x-3 top-4 text-center pointer-events-none">
                   {cover.typography.showSubtitle && cover.subtitle && (
-                    <div className="text-[9px] text-zinc-300 uppercase tracking-widest font-semibold drop-shadow">
+                    <div className="text-[9px] text-white/90 uppercase tracking-widest font-medium drop-shadow-sm truncate">
                       {cover.subtitle}
                     </div>
                   )}
-                  <div className="text-sm font-black text-amber-300 uppercase tracking-wider drop-shadow-md leading-tight mt-0.5">
+                  <div className="text-sm font-bold text-white uppercase tracking-wider drop-shadow-md leading-tight mt-0.5 truncate">
                     {cover.title}
                   </div>
                 </div>
 
-                <div className="absolute inset-x-3 bottom-3 text-center text-[10px] text-zinc-200 uppercase tracking-wider font-bold drop-shadow">
+                <div className="absolute inset-x-3 bottom-3 text-center text-[10px] text-white/90 uppercase tracking-wider font-medium drop-shadow-sm truncate">
                   {cover.authorName}
                 </div>
 
-                {/* Score Pill Badge */}
-                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm border border-emerald-500/40 text-[10px] font-bold text-emerald-400 flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3" />
-                  <span>{cover.consistencyReport.overallScore}%</span>
+                {/* Subtle book spine edge highlight */}
+                <div className="absolute inset-y-0 left-0 w-2.5 bg-gradient-to-r from-black/20 to-transparent pointer-events-none" />
+
+                {/* Consistency score pill */}
+                <div className="absolute top-2 right-2 px-2 py-0.5 rounded-[4px] bg-white/90 backdrop-blur-sm border border-[#E8E4DE] text-[10px] font-medium text-[#1C1B1A]">
+                  {cover.consistencyReport.overallScore}%
                 </div>
               </div>
 
               {/* Card Meta & Actions */}
-              <div className="p-4 space-y-3">
+              <div className="pt-3 space-y-2">
                 <div>
-                  <h3 className="text-sm font-bold text-white truncate" title={cover.title}>
+                  <h3 className="font-['Playfair_Display'] text-base font-normal text-[#1C1B1A] truncate" title={cover.title}>
                     {cover.title}
                   </h3>
-                  <div className="flex items-center justify-between text-[11px] text-zinc-400 mt-1">
-                    <span className="capitalize text-indigo-400 font-medium">
-                      {cover.genre}
-                    </span>
+                  <div className="flex items-center justify-between text-xs text-[#6B6763] mt-0.5">
+                    <span className="capitalize">{cover.genre}</span>
                     <span>{cover.characterName}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-2 border-t border-zinc-800 text-xs">
+                <div className="flex items-center justify-between pt-2 border-t border-[#E8E4DE] text-xs">
                   <button
                     onClick={() => handleDownload(cover)}
-                    className="flex items-center gap-1 text-zinc-300 hover:text-white font-medium hover:bg-zinc-800 px-2.5 py-1.5 rounded-lg transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[#1C1B1A] hover:text-[#B4553A] font-medium transition-colors"
                   >
-                    <Download className="w-3.5 h-3.5 text-indigo-400" />
+                    <Download className="w-3.5 h-3.5" strokeWidth={1.5} />
                     <span>Download</span>
                   </button>
 
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => setInspectingCover(cover)}
-                      className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg"
-                      title="Inspect full resolution"
+                      className="p-1.5 text-[#6B6763] hover:text-[#1C1B1A] rounded-[4px] hover:bg-[#FAF8F5]"
+                      title="Inspect"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-3.5 h-3.5" strokeWidth={1.5} />
                     </button>
 
                     <button
@@ -161,10 +156,10 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
                           onDeleteCover(cover.id);
                         }
                       }}
-                      className="p-1.5 text-zinc-500 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg"
-                      title="Delete cover"
+                      className="p-1.5 text-[#6B6763] hover:text-[#B4553A] rounded-[4px] hover:bg-[#FAF8F5]"
+                      title="Delete"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" strokeWidth={1.5} />
                     </button>
                   </div>
                 </div>
@@ -176,29 +171,29 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
 
       {/* INSPECT MODAL */}
       {inspectingCover && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl w-full max-w-3xl overflow-hidden shadow-2xl relative my-8">
-            <div className="p-6 border-b border-zinc-800 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-[#1C1B1A]/40 backdrop-blur-[2px] flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white border border-[#E8E4DE] rounded-[10px] w-full max-w-3xl overflow-hidden shadow-lg relative my-8">
+            <div className="p-6 border-b border-[#E8E4DE] flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="font-['Playfair_Display'] text-2xl font-normal text-[#1C1B1A]">
                   {inspectingCover.title}
                 </h3>
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-[#6B6763] mt-1">
                   By {inspectingCover.authorName} • {inspectingCover.genre.toUpperCase()}
                 </p>
               </div>
 
               <button
                 onClick={() => setInspectingCover(null)}
-                className="p-2 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800"
+                className="p-2 text-[#6B6763] hover:text-[#1C1B1A] rounded-[6px] hover:bg-[#FAF8F5]"
               >
-                <X className="w-5 h-5" />
+                <X className="w-5 h-5" strokeWidth={1.5} />
               </button>
             </div>
 
-            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               {/* Cover Preview Stage */}
-              <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border border-zinc-700 bg-zinc-950">
+              <div className="relative aspect-[2/3] rounded-[6px] overflow-hidden border border-[#E8E4DE] bg-[#FAF8F5]">
                 <img
                   src={inspectingCover.imageUrl}
                   alt={inspectingCover.title}
@@ -208,13 +203,13 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
                 <div
                   style={{
                     top: `${inspectingCover.typography.titleY}%`,
-                    fontFamily: `"${inspectingCover.typography.titleFont}", sans-serif`,
+                    fontFamily: `"${inspectingCover.typography.titleFont}", serif`,
                     fontSize: `${(inspectingCover.typography.titleSize / 100) * 44}px`,
                     color: inspectingCover.typography.titleColor,
                     letterSpacing: `${inspectingCover.typography.titleTracking}px`,
                     textShadow: `0 3px 12px ${inspectingCover.typography.shadowColor}`,
                   }}
-                  className="absolute inset-x-3 text-center font-extrabold uppercase leading-tight pointer-events-none"
+                  className="absolute inset-x-3 text-center font-normal uppercase leading-tight pointer-events-none"
                 >
                   {inspectingCover.title}
                 </div>
@@ -228,48 +223,45 @@ export const GalleryView: React.FC<GalleryViewProps> = ({
                     letterSpacing: `${inspectingCover.typography.authorTracking}px`,
                     textShadow: `0 2px 8px ${inspectingCover.typography.shadowColor}`,
                   }}
-                  className="absolute inset-x-3 text-center font-bold uppercase pointer-events-none"
+                  className="absolute inset-x-3 text-center font-medium uppercase pointer-events-none"
                 >
                   {inspectingCover.authorName}
                 </div>
               </div>
 
-              {/* Metadata & Consistency Details */}
+              {/* Metadata Details */}
               <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+                <div className="p-4 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE] space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-zinc-400 uppercase">
+                    <span className="text-xs font-semibold uppercase tracking-[0.08em] text-[#6B6763]">
                       Consistency Score
                     </span>
-                    <span className="text-lg font-black text-emerald-400">
-                      {inspectingCover.consistencyReport.overallScore}% Match
+                    <span className="font-['Playfair_Display'] text-xl font-normal text-[#1C1B1A]">
+                      {inspectingCover.consistencyReport.overallScore}%
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-300">
-                    Verdict: <strong className="text-white">{inspectingCover.consistencyReport.verdict}</strong>
-                  </p>
-                  <ul className="text-[11px] text-zinc-400 space-y-1 pt-1">
+                  <ul className="text-xs text-[#6B6763] space-y-1 pt-1">
                     {inspectingCover.consistencyReport.driftObservations.map((obs, i) => (
                       <li key={i} className="flex items-start gap-1.5">
-                        <span className="text-emerald-400">•</span>
+                        <span className="text-[#B4553A]">•</span>
                         <span>{obs}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-1.5 text-xs">
-                  <div className="text-zinc-500 uppercase font-semibold text-[10px]">Scene Prompt</div>
-                  <div className="text-zinc-300">{inspectingCover.scenePrompt}</div>
+                <div className="p-4 rounded-[8px] bg-[#FAF8F5] border border-[#E8E4DE] space-y-1 text-xs">
+                  <div className="text-[10px] uppercase tracking-[0.08em] text-[#6B6763]">Scene Prompt</div>
+                  <div className="text-[#1C1B1A] leading-relaxed">{inspectingCover.scenePrompt}</div>
                 </div>
 
                 <div className="pt-2">
                   <button
                     onClick={() => handleDownload(inspectingCover)}
-                    className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-[8px] bg-gradient-to-r from-[#B4553A] to-[#D9A066] text-white font-medium text-sm hover:opacity-95 transition-opacity inline-flex items-center justify-center gap-2"
                   >
-                    <Download className="w-4 h-4" />
-                    <span>Download Full Resolution 6x9 PNG</span>
+                    <Download className="w-4 h-4" strokeWidth={1.5} />
+                    <span>Download 6x9 PNG</span>
                   </button>
                 </div>
               </div>
